@@ -87,6 +87,20 @@ export function Supply({ ingredients, suppliers, purchaseOrders, refresh }) {
                   <strong>{order.id}</strong>
                   <span>{suppliers.find((item) => item.id === order.supplier_id)?.name} · 到货 {order.expected_arrival}</span>
                   <small>{order.remark || '无备注'}</small>
+                  <div className="order-items">
+                    {order.items.map((item, idx) => {
+                      const ing = ingredients.find((i) => i.id === item.ingredient_id)
+                      return (
+                        <div className="order-item" key={idx}>
+                          <span>{ing?.name || item.ingredient_id}</span>
+                          <span className="item-qty">{item.qty}{ing?.unit || ''} × ¥{item.unit_price}</span>
+                          {item.avg_price_after !== undefined && (
+                            <span className="item-avg">新均价 ¥{item.avg_price_after}</span>
+                          )}
+                        </div>
+                      )
+                    })}
+                  </div>
                 </div>
                 <div className="order-side">
                   <b>¥{order.total_amount}</b>

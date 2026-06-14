@@ -43,10 +43,21 @@ def update_purchase_status(order_id: str, status_value: str) -> dict:
 
     previous_status = order["status"]
     order["status"] = status_value
-    if status_value == "received" and previous_status != "received":
+
+    stock_adjusted = order.get("stock_adjusted", False)
+    if status_value == "received" and not stock_adjusted:
         for item in order["items"]:
             ingredient = store.ingredients[item["ingredient_id"]]
-            ingredient["stock_qty"] = round(ingredient["stock_qty"] + item["qty"], 2)
-            ingredient["avg_price"] = round(item["unit_price"], 2)
+            old_qty = ingredient["stock_qty"]
+            old_amount = old_qty * ingredient["avg_price"]
+            new_qty = item["qty"]
+            new_amount = new_qty * item["unit_price"]
+            total_qty = old_qty + new_qty
+            total_amount = old_amount + new_amount
+            ingredient["stock_qty"] = round(total_qty, 2)
+            ingredient["avg_price"] = round(total_amount / total_qty, 2) if total_qty > 0 else 0
+            item["avg_price_after"] = ingredient["avg_price"]
+        order["stock_adjusted"] = True
+
     return order
 

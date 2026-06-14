@@ -360,6 +360,38 @@ textarea {
   min-width: 112px;
 }
 
+.order-items {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed #e2e7df;
+  display: grid;
+  gap: 6px;
+}
+
+.order-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+}
+
+.order-item span {
+  margin: 0;
+}
+
+.order-item .item-qty {
+  color: #66736b;
+}
+
+.order-item .item-avg {
+  color: #2d6a4f;
+  font-weight: 700;
+  background: #e2f4e8;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+}
+
 .status {
   display: inline-flex;
   align-items: center;
