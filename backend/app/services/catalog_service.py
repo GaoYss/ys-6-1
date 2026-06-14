@@ -4,11 +4,21 @@ from app.data import store
 from app.schemas.dishes import DishCreate, DishUpdate, SpecificationCreate, SpecificationUpdate
 
 
+def _calc_ingredient_cost(spec: dict) -> float:
+    total = 0.0
+    for usage in spec.get("ingredients", []):
+        ingredient = store.ingredients.get(usage["ingredient_id"])
+        if ingredient:
+            total += usage["qty"] * ingredient["avg_price"]
+    return round(total, 2)
+
+
 def _spec_with_profit(spec: dict) -> dict:
-    cost = spec["ingredient_cost"] + spec["packaging_cost"]
+    ingredient_cost = _calc_ingredient_cost(spec)
+    cost = ingredient_cost + spec["packaging_cost"]
     gross_profit = round(spec["sale_price"] - cost, 2)
     gross_margin = round(gross_profit / spec["sale_price"], 4) if spec["sale_price"] else 0
-    return {**spec, "gross_profit": gross_profit, "gross_margin": gross_margin}
+    return {**spec, "ingredient_cost": ingredient_cost, "gross_profit": gross_profit, "gross_margin": gross_margin}
 
 
 def list_dishes() -> list[dict]:
@@ -48,6 +58,9 @@ def list_specifications(dish_id: str | None = None) -> list[dict]:
 def create_specification(payload: SpecificationCreate) -> dict:
     if payload.dish_id not in store.dishes:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Dish not found")
+    for usage in payload.ingredients:
+        if usage.ingredient_id not in store.ingredients:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Ingredient {usage.ingredient_id} not found")
     item = {"id": store.new_id("spec"), **payload.model_dump()}
     store.specifications[item["id"]] = item
     return _spec_with_profit(item)
@@ -60,6 +73,10 @@ def update_specification(spec_id: str, payload: SpecificationUpdate) -> dict:
     changes = payload.model_dump(exclude_unset=True)
     if changes.get("dish_id") and changes["dish_id"] not in store.dishes:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Dish not found")
+    if changes.get("ingredients"):
+        for usage in changes["ingredients"]:
+            if usage["ingredient_id"] not in store.ingredients:
+                raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Ingredient {usage['ingredient_id']} not found")
     spec.update(changes)
     return _spec_with_profit(spec)
 

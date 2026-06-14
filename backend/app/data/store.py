@@ -40,8 +40,8 @@ specifications: dict[str, dict] = {
         "name": "小份",
         "serving_size": "180g",
         "sale_price": 38,
-        "ingredient_cost": 18.5,
-        "packaging_cost": 1.2,
+        "ingredients": [{"ingredient_id": "ing_beef", "qty": 0.18}, {"ingredient_id": "ing_packaging", "qty": 1}],
+        "packaging_cost": 0,
     },
     "spec_beef_large": {
         "id": "spec_beef_large",
@@ -49,8 +49,8 @@ specifications: dict[str, dict] = {
         "name": "大份",
         "serving_size": "300g",
         "sale_price": 58,
-        "ingredient_cost": 29.8,
-        "packaging_cost": 1.6,
+        "ingredients": [{"ingredient_id": "ing_beef", "qty": 0.3}, {"ingredient_id": "ing_packaging", "qty": 1}],
+        "packaging_cost": 0,
     },
     "spec_tripe_regular": {
         "id": "spec_tripe_regular",
@@ -58,8 +58,8 @@ specifications: dict[str, dict] = {
         "name": "标准份",
         "serving_size": "220g",
         "sale_price": 46,
-        "ingredient_cost": 20.4,
-        "packaging_cost": 1.4,
+        "ingredients": [{"ingredient_id": "ing_tripe", "qty": 0.22}, {"ingredient_id": "ing_packaging", "qty": 1}],
+        "packaging_cost": 0,
     },
     "spec_mushroom_regular": {
         "id": "spec_mushroom_regular",
@@ -67,8 +67,8 @@ specifications: dict[str, dict] = {
         "name": "标准份",
         "serving_size": "260g",
         "sale_price": 28,
-        "ingredient_cost": 11.6,
-        "packaging_cost": 1.0,
+        "ingredients": [{"ingredient_id": "ing_mushroom", "qty": 0.26}, {"ingredient_id": "ing_packaging", "qty": 1}],
+        "packaging_cost": 0,
     },
 }
 
