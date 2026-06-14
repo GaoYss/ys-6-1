@@ -94,7 +94,7 @@ export function Supply({ ingredients, suppliers, purchaseOrders, refresh }) {
                         <div className="order-item" key={idx}>
                           <span>{ing?.name || item.ingredient_id}</span>
                           <span className="item-qty">{item.qty}{ing?.unit || ''} × ¥{item.unit_price}</span>
-                          {item.avg_price_after !== undefined && (
+                          {item.avg_price_after != null && (
                             <span className="item-avg">新均价 ¥{item.avg_price_after}</span>
                           )}
                         </div>

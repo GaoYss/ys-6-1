@@ -24,6 +24,7 @@ class PurchaseOrderItem(BaseModel):
     ingredient_id: str
     qty: float = Field(gt=0)
     unit_price: float = Field(gt=0)
+    avg_price_after: float | None = None
 
 
 class PurchaseOrderCreate(BaseModel):
@@ -37,6 +38,7 @@ class PurchaseOrder(PurchaseOrderCreate):
     id: str
     status: str
     total_amount: float
+    stock_adjusted: bool = False
 
 
 class PurchaseStatusUpdate(BaseModel):
